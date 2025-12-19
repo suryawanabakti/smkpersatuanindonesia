@@ -38,21 +38,63 @@
                     Dashboard
                 </a>
 
-                <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('users.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('users.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                @role('panitia pddb')
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-4">Panitia PPDB</p>
+                <a href="{{ route('panitia.jadwal.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('panitia.jadwal.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('panitia.jadwal.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Jadwal PPDB
+                </a>
+                <a href="{{ route('panitia.pendaftaran.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('panitia.pendaftaran.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('panitia.pendaftaran.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    Users
+                    Pendaftaran Siswa
                 </a>
+                @endrole
 
-                <!-- Reports Dropdown -->
-                <div class="space-y-1">
-                    <button type="button" onclick="toggleFilesDropdown()" class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group focus:outline-none">
+                @role('bendahara')
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-4">Bendahara</p>
+                <a href="{{ route('bendahara.pembayaran.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('bendahara.pembayaran.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('bendahara.pembayaran.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Data Pembayaran
+                </a>
+                <a href="{{ route('bendahara.laporan.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('bendahara.laporan.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('bendahara.laporan.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Laporan Keuangan
+                </a>
+                @endrole
+
+                @unlessrole('panitia pddb|bendahara')
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-4">Siswa</p>
+                <a href="{{ route('student.dashboard') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('student.dashboard') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('student.dashboard') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Dashboard Siswa
+                </a>
+                <a href="{{ route('student.payment.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group {{ request()->routeIs('student.payment.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="h-5 w-5 mr-3 {{ request()->routeIs('student.payment.*') ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Pembayaran SPP
+                </a>
+                @endunlessrole
+
+                <!-- Reports Dropdown (Keeping this generally available or specific? "Laporan" was generic before) -->
+                <!-- Assuming Admin or similar for this one, I'll allow it for everyone or maybe just not touch permissions not requested -->
+                <div class="space-y-1 mt-4">
+                     <button type="button" onclick="toggleFilesDropdown()" class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group focus:outline-none">
                         <div class="flex items-center">
                             <svg class="h-5 w-5 mr-3 text-gray-400 group-hover:text-gray-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
-                            Laporan
+                            Laporan (System)
                         </div>
                         <svg id="files-chevron" class="h-4 w-4 text-gray-400 group-hover:text-gray-500 transition-transform duration-200 {{ request()->routeIs('reports.*') ? 'rotate-180' : '' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -61,12 +103,6 @@
                    <div id="files-dropdown" class="{{ request()->routeIs('reports.*') ? '' : 'hidden' }} pl-12 space-y-1">
                         <a href="{{ route('reports.login_activity') }}" class="block px-4 py-2 text-sm font-medium {{ request()->routeIs('reports.login_activity') ? 'text-indigo-600 bg-indigo-50' : 'text-gray-500 hover:text-indigo-600 hover:bg-gray-50' }} rounded-lg transition-colors">
                            Login Activity
-                        </a>
-                        <a href="#" class="block px-4 py-2 text-sm font-medium text-gray-500 rounded-lg hover:text-indigo-600 hover:bg-gray-50 transition-colors">
-                            Laporan Bulanan
-                        </a>
-                        <a href="#" class="block px-4 py-2 text-sm font-medium text-gray-500 rounded-lg hover:text-indigo-600 hover:bg-gray-50 transition-colors">
-                            Laporan Tahunan
                         </a>
                     </div>
                 </div>
