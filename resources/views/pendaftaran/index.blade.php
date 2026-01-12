@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pendaftaran Siswa Baru - SMK PI MAROS</title>
+    <title>Pendaftaran Siswa Baru - SMK Persatuan Indonesia Maros</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -15,7 +15,7 @@
     <nav class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="{{ route('landing') }}" class="text-xl font-bold text-gray-900 tracking-tight">SMK PI MAROS</a>
+                <a href="{{ route('landing') }}" class="text-xl font-bold text-gray-900 tracking-tight">SMK Persatuan Indonesia Maros</a>
                 <a href="{{ route('landing') }}" class="text-sm text-gray-500 hover:text-blue-600 font-medium">Kembali ke Beranda</a>
             </div>
         </div>
@@ -51,75 +51,40 @@
                     <div class="pb-6 border-b border-gray-100">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Akun</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             <div class="col-span-1 md:col-span-2">
+                                 <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                                 <input type="text" name="nama_lengkap" id="nama_lengkap" value="{{ old('nama_lengkap') }}" class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" placeholder="Sesuai Ijazah" required>
+                                 @error('nama_lengkap') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                            </div>
                             <div class="col-span-1 md:col-span-2">
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Alamat Email</label>
-                                <input type="email" name="email" id="email" value="{{ old('email') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" placeholder="email@contoh.com" required>
+                                <input type="email" name="email" id="email" value="{{ old('email') }}" class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" placeholder="email@contoh.com" required>
                                 @error('email') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" name="password" id="password" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" required>
+                                <input type="password" name="password" id="password" class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" required>
                                 @error('password') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
-                                <input type="password" name="password_confirmation" id="password_confirmation" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" required>
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" required>
                             </div>
                         </div>
                     </div>
 
                     <!-- Data Pribadi -->
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Data Pribadi</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Pilihan Jurusan</h3>
                         <div class="space-y-6">
                             <div>
-                                <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                                <input type="text" name="nama_lengkap" id="nama_lengkap" value="{{ old('nama_lengkap') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" placeholder="Sesuai Ijazah" required>
-                                @error('nama_lengkap') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="nisn" class="block text-sm font-medium text-gray-700 mb-1">NISN</label>
-                                    <input type="text" name="nisn" id="nisn" value="{{ old('nisn') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" required>
-                                    @error('nisn') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label for="asal_sekolah" class="block text-sm font-medium text-gray-700 mb-1">Asal Sekolah</label>
-                                    <input type="text" name="asal_sekolah" id="asal_sekolah" value="{{ old('asal_sekolah') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" placeholder="SMP/MTS..." required>
-                                    @error('asal_sekolah') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="no_hp" class="block text-sm font-medium text-gray-700 mb-1">No. HP Siswa (WhatsApp)</label>
-                                    <input type="text" name="no_hp" id="no_hp" value="{{ old('no_hp') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" placeholder="08..." required>
-                                    @error('no_hp') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label for="no_hp_orang_tua" class="block text-sm font-medium text-gray-700 mb-1">No. HP Orang Tua (Untuk Notifikasi)</label>
-                                    <input type="text" name="no_hp_orang_tua" id="no_hp_orang_tua" value="{{ old('no_hp_orang_tua') }}" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" placeholder="08..." required>
-                                    <p class="text-xs text-gray-500 mt-1">Kami akan mengirimkan notifikasi pendaftaran ke nomor ini.</p>
-                                    @error('no_hp_orang_tua') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                                </div>
-                            </div>
-
-                            <div>
                                 <label for="jurusan_pilihan" class="block text-sm font-medium text-gray-700 mb-1">Pilihan Jurusan</label>
-                                <select name="jurusan_pilihan" id="jurusan_pilihan" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" required>
+                                <select name="jurusan_pilihan" id="jurusan_pilihan" class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" required>
                                     <option value="">-- Pilih Jurusan --</option>
-                                    <option value="TKJ" {{ old('jurusan_pilihan') == 'TKJ' ? 'selected' : '' }}>Teknik Komputer & Jaringan</option>
-                                    <option value="RPL" {{ old('jurusan_pilihan') == 'RPL' ? 'selected' : '' }}>Rekayasa Perangkat Lunak</option>
-                                    <option value="Farmasi" {{ old('jurusan_pilihan') == 'Farmasi' ? 'selected' : '' }}>Farmasi Klinis</option>
+                                    <option value="TJKT" {{ old('jurusan_pilihan') == 'TJKT' ? 'selected' : '' }}>Teknik Jaringan Komputer dan Telekomunikasi</option>
+                                    <option value="TKRO" {{ old('jurusan_pilihan') == 'TKRO' ? 'selected' : '' }}>Teknik Kendaraan Ringan Otomotif</option>
                                 </select>
                                 @error('jurusan_pilihan') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div>
-                                <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
-                                <textarea name="alamat" id="alamat" rows="3" class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition-colors shadow-sm py-3 px-4 text-lg" required>{{ old('alamat') }}</textarea>
-                                @error('alamat') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

@@ -47,4 +47,9 @@ class User extends Authenticatable
             'last_login_at' => 'datetime',
         ];
     }
+
+    public function pendaftaran()
+    {
+        return $this->hasOne(PendaftaranSiswa::class);
+    }
 }

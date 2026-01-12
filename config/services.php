@@ -21,7 +21,12 @@ return [
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],
-
+    'mocean' => [
+        'api_key' => env('MOCEAN_API_KEY'),
+        'api_secret' => env('MOCEAN_API_SECRET'),
+        'api_token' => env('MOCEAN_API_TOKEN', 'apit-4DB7eKRWcQuz3asW1mbml8R5tXbhiI5a-9w8d6'),
+        'from' => env('MOCEAN_FROM', '601119374535'),
+    ],
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

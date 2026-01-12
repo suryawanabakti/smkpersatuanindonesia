@@ -9,34 +9,58 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
-        if ($user->hasRole('panitia pddb')) {
-            return $this->panitiaDashboard();
+        if ($user->hasRole('kepala_sekolah')) {
+            return redirect()->route('kepala_sekolah.dashboard', $request->all());
+        }
+
+        if ($user->hasRole('panitia')) {
+            return $this->panitiaDashboard($request);
         }
 
         if ($user->hasRole('bendahara')) {
             return $this->bendaharaDashboard();
         }
 
-        if ($user->hasRole('student') || $user->pendaftaranSiswa) {
+        if ($user->pendaftaran) {
             return redirect()->route('student.dashboard');
         }
 
         return view('dashboard');
     }
 
-    private function panitiaDashboard()
+    private function panitiaDashboard(Request $request)
     {
-        $totalSiswa = PendaftaranSiswa::count();
-        $totalDiterima = PendaftaranSiswa::where('status', 'diterima')->count();
-        $totalDitolak = PendaftaranSiswa::where('status', 'ditolak')->count();
-        $totalPending = PendaftaranSiswa::where('status', 'pending')->count();
-        $recentSiswa = PendaftaranSiswa::latest()->take(5)->get();
+        $selectedYear = $request->get('year', date('Y'));
+        $availableYears = PendaftaranSiswa::selectRaw('YEAR(created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
 
-        return view('panitia.dashboard', compact('totalSiswa', 'totalDiterima', 'totalDitolak', 'totalPending', 'recentSiswa'));
+        if ($availableYears->isEmpty()) {
+            $availableYears = collect([date('Y')]);
+        }
+
+        $query = PendaftaranSiswa::whereYear('created_at', $selectedYear);
+
+        $totalSiswa = (clone $query)->count();
+        $totalDiterima = (clone $query)->where('status', 'diterima')->count();
+        $totalDitolak = (clone $query)->where('status', 'ditolak')->count();
+        $totalPending = (clone $query)->where('status', 'pending')->count();
+        $recentSiswa = (clone $query)->latest()->take(5)->get();
+
+        return view('panitia.dashboard', compact(
+            'totalSiswa',
+            'totalDiterima',
+            'totalDitolak',
+            'totalPending',
+            'recentSiswa',
+            'availableYears',
+            'selectedYear'
+        ));
     }
 
     private function bendaharaDashboard()

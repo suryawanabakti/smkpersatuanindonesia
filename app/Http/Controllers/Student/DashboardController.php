@@ -16,6 +16,16 @@ class DashboardController extends Controller
 
         $latestPayment = \App\Models\Payment::where('user_id', $user->id)->latest()->first();
 
-        return view('student.dashboard', compact('user', 'pendaftaran', 'latestPayment'));
+        $sppInfo = null;
+        if ($pendaftaran) {
+            $sppInfo = \App\Models\SppInformation::where('jurusan', $pendaftaran->jurusan_pilihan)->first();
+        }
+
+        // Fetch all registered students
+        $allStudents = \App\Models\PendaftaranSiswa::orderByRaw("user_id = ? DESC", [$user->id])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('student.dashboard', compact('user', 'pendaftaran', 'latestPayment', 'sppInfo', 'allStudents'));
     }
 }

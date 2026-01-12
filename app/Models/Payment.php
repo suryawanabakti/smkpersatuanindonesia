@@ -16,6 +16,11 @@ class Payment extends Model
         'status',
         'snap_token',
         'description',
+        'topi',
+        'dasi',
+        'baju',
+        'batik',
+        'baju_olahraga',
     ];
 
     public function user()

@@ -1,9 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Laporan Pembayaran') }}
-        </h2>
-    </x-slot>
+    @section('header', 'Laporan Keuangan')
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -16,7 +12,7 @@
                 </div>
 
                 <h3 class="text-lg font-bold mb-4">Pendapatan Per Bulan</h3>
-                <div class="overflow-x-auto">
+                <div class="hidden md:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -33,6 +29,22 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Mobile Card View -->
+                <div class="block md:hidden space-y-3">
+                    @foreach ($pendapatanPerBulan as $data)
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-gray-400">Bulan</p>
+                                <p class="text-sm font-bold text-gray-900">{{ $data->months }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] uppercase font-bold text-gray-400">Total</p>
+                                <p class="text-base font-black text-indigo-600">Rp {{ number_format($data->sums, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

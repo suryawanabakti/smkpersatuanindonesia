@@ -1,7 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        User Login Activity
-    </x-slot>
+    @section('header', 'Login Activity')
 
     <div class="max-w-7xl mx-auto space-y-6">
         
@@ -19,7 +17,7 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="overflow-x-auto">
+            <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-100">
                     <thead>
                         <tr class="bg-gray-50/50">
@@ -96,6 +94,54 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="block md:hidden space-y-4 p-4 bg-gray-50/50">
+                @forelse($users as $user)
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm transition-all duration-200 active:scale-[0.98]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md underline-offset-4 ring-2 ring-white ring-offset-2 ring-offset-indigo-50">
+                                {{ substr($user->name, 0, 1) }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h4 class="text-base font-bold text-gray-900 truncate">{{ $user->name }}</h4>
+                                <p class="text-xs text-gray-500 truncate">ID: #{{ $user->id }} • {{ $user->email }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                            @php
+                                $lastLogin = optional($user->last_login_at);
+                                $isRecent = $lastLogin && $lastLogin->diffInMinutes(now()) < 30;
+                            @endphp
+                            <div class="flex items-center">
+                                <span class="relative flex h-2 w-2 mr-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $isRecent ? 'bg-green-400' : 'bg-gray-400' }} opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 {{ $isRecent ? 'bg-green-500' : 'bg-gray-400' }}"></span>
+                                </span>
+                                <span class="text-xs font-semibold {{ $isRecent ? 'text-green-700' : 'text-gray-500' }}">
+                                    {{ $isRecent ? 'Online' : 'Offline' }}
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-bold text-gray-700">
+                                    {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Never' }}
+                                </p>
+                                @if($user->last_login_at)
+                                    <p class="text-[10px] text-gray-400 mt-0.5">{{ $user->last_login_at->format('d M, H:i') }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-100 shadow-inner">
+                        <svg class="h-10 w-10 text-gray-200 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-gray-500 text-sm font-medium">No login activity recorded yet.</p>
+                    </div>
+                @endforelse
             </div>
 
             @if($users->hasPages())

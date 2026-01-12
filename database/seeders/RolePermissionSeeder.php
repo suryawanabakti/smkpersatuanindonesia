@@ -24,6 +24,8 @@ class RolePermissionSeeder extends Seeder
             'view pendaftaran siswa',
             'manage data pembayaran',
             'view laporan pembayaran',
+            'view laporan ppdb',
+            'manage users',
         ];
 
         foreach ($permissions as $permission) {
@@ -31,11 +33,15 @@ class RolePermissionSeeder extends Seeder
         }
 
         // Create Roles and assign permissions
-        $rolePanitia = Role::firstOrCreate(['name' => 'panitia pddb']);
+        $rolePanitia = Role::firstOrCreate(['name' => 'panitia']);
+        $roleStudent = Role::firstOrCreate(['name' => 'student']);
         $rolePanitia->givePermissionTo(['manage jadwal ppdb', 'view pendaftaran siswa']);
 
         $roleBendahara = Role::firstOrCreate(['name' => 'bendahara']);
         $roleBendahara->givePermissionTo(['manage data pembayaran', 'view laporan pembayaran']);
+
+        $roleKepalaSekolah = Role::firstOrCreate(['name' => 'kepala_sekolah']);
+        $roleKepalaSekolah->givePermissionTo(['view laporan ppdb', 'manage users']);
 
         // Create Users for testing
         $userPanitia = User::firstOrCreate([
@@ -53,6 +59,14 @@ class RolePermissionSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $userBendahara->assignRole($roleBendahara);
+
+        $userKepalaSekolah = User::firstOrCreate([
+            'email' => 'kepala@sekolah.com',
+        ], [
+            'name' => 'Kepala Sekolah',
+            'password' => Hash::make('password'),
+        ]);
+        $userKepalaSekolah->assignRole($roleKepalaSekolah);
 
         // Also assign Super Admin role if needed, or just skip for now as not requested.
     }

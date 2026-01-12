@@ -1,7 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        Overview
-    </x-slot>
+    @section('header', 'Dashboard')
 
     <div class="max-w-7xl mx-auto space-y-6">
         

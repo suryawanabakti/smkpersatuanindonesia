@@ -1,7 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        User Management
-    </x-slot>
+    @section('header', 'Kelola Pengguna')
 
     <div class="max-w-7xl mx-auto space-y-6">
         
@@ -59,7 +57,7 @@
                 </div>
             </div>
             
-            <div class="overflow-x-auto">
+            <div class="hidden md:block overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -114,6 +112,47 @@
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="block md:hidden space-y-4 p-4 bg-gray-50">
+                @forelse($users as $user)
+                    <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm transition-all duration-200 active:scale-[0.98]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-12 w-12 flex-shrink-0 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 font-bold text-lg shadow-inner">
+                                {{ substr($user->name, 0, 1) }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h4 class="text-base font-bold text-gray-900 truncate">{{ $user->name }}</h4>
+                                <p class="text-sm text-gray-500 truncate">{{ $user->email }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                            <span class="text-xs text-gray-400 font-medium">
+                                Joined {{ $user->created_at->format('M d, Y') }}
+                            </span>
+                            <div class="flex gap-2">
+                                <a href="{{ route('users.edit', $user) }}" 
+                                   class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors">
+                                    Edit
+                                </a>
+                                <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-bold hover:bg-red-100 transition-colors">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8 text-sm text-gray-500 bg-white rounded-2xl border border-dashed border-gray-200">
+                        No users found.
+                    </div>
+                @endforelse
             </div>
 
             @if($users->hasPages())

@@ -17,7 +17,7 @@
                     <!-- Name -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" required autofocus class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base py-3 px-4 transition-all duration-200 ease-in-out" placeholder="John Doe">
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" required autofocus class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" placeholder="John Doe">
                         @error('name')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -26,7 +26,7 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                        <input type="email" name="email" id="email" value="{{ old('email') }}" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base py-3 px-4 transition-all duration-200 ease-in-out" placeholder="john@example.com">
+                        <input type="email" name="email" id="email" value="{{ old('email') }}" required class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" placeholder="john@example.com">
                         @error('email')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -35,7 +35,7 @@
                     <!-- Password -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" name="password" id="password" required class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base py-3 px-4 transition-all duration-200 ease-in-out" placeholder="••••••••">
+                        <input type="password" name="password" id="password" required class="block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" placeholder="••••••••">
                         @error('password')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror

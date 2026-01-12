@@ -3,23 +3,32 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Payment;
+use App\Models\SchoolInformation;
 use App\Services\MidtransService;
+use App\Services\WhatsAppService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
+    protected $whatsappService;
+    public function __construct(WhatsAppService $whatsappService)
+    {
+        $this->whatsappService = $whatsappService;
+    }
     public function index()
     {
         $payments = Payment::where('user_id', Auth::id())->latest()->get();
+
         return view('student.payment.index', compact('payments'));
     }
 
     public function create()
     {
-        return view('student.payment.create');
+        $schoolInformation = SchoolInformation::first();
+        return view('student.payment.create', compact('schoolInformation'));
     }
 
     public function store(Request $request)
@@ -27,18 +36,30 @@ class PaymentController extends Controller
         $request->validate([
             'amount' => 'required|numeric|min:1000',
             'description' => 'required|string|max:255',
+            'attributes' => 'required|array',
         ]);
 
         $user = Auth::user();
-        $orderId = 'SPP-' . Str::random(10);
+        $orderId = 'PPDB-' . Str::random(10);
 
-        $payment = Payment::create([
+        $data = [
             'user_id' => $user->id,
             'order_id' => $orderId,
             'amount' => $request->amount,
             'status' => 'pending',
             'description' => $request->description,
-        ]);
+        ];
+
+        // Map attributes from array to boolean columns
+        if ($request->has('attributes')) {
+            foreach ($request->attributes as $attr) {
+                if (in_array($attr, ['topi', 'dasi', 'baju', 'batik', 'baju_olahraga'])) {
+                    $data[$attr] = true;
+                }
+            }
+        }
+
+        $payment = Payment::create($data);
 
         $params = [
             'transaction_details' => [
@@ -52,7 +73,7 @@ class PaymentController extends Controller
         ];
 
         try {
-            $midtrans = new MidtransService();
+            $midtrans = new MidtransService;
             $snapToken = $midtrans->getSnapToken($params);
 
             $payment->update(['snap_token' => $snapToken]);
@@ -66,8 +87,78 @@ class PaymentController extends Controller
     public function show($id)
     {
         $payment = Payment::where('user_id', Auth::id())->findOrFail($id);
+
         return view('student.payment.show', compact('payment'));
     }
 
-    // Webhook implementation would go here, but omitted for now as it requires public URL
+    public function print($id)
+    {
+        $payment = Payment::where('user_id', Auth::id())->findOrFail($id);
+
+        return view('student.payment.print', compact('payment'));
+    }
+
+    public function notification(Request $request)
+    {
+        $payload = $request->getContent();
+        $notification = json_decode($payload);
+
+        $validSignatureKey = hash('sha512', $notification->order_id . $notification->status_code . $notification->gross_amount . config('midtrans.server_key'));
+
+        if ($notification->signature_key != $validSignatureKey) {
+            return response(['message' => 'Invalid signature'], 403);
+        }
+
+        $transactionStatus = $notification->transaction_status;
+        $payment = Payment::where('order_id', $notification->order_id)->first();
+
+        if (! $payment) {
+            return response(['message' => 'Payment not found'], 404);
+        }
+
+        if ($transactionStatus == 'capture') {
+            if ($notification->fraud_status == 'accept') {
+                $payment->update(['status' => 'paid']);
+            }
+        } elseif ($transactionStatus == 'settlement') {
+            $payment->update(['status' => 'paid']);
+        } elseif ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
+            $payment->update(['status' => 'failed']);
+        } elseif ($transactionStatus == 'pending') {
+            $payment->update(['status' => 'pending']);
+        }
+
+        return response(['message' => 'Notification processed'], 200);
+    }
+
+    public function success($id)
+    {
+        $payment = Payment::where('user_id', Auth::id())->findOrFail($id);
+        $payment->update(['status' => 'paid']); // Or 'success' based on your enum
+        // Optional: Send WhatsApp Notification here as well since webhook might be skipped locally
+        $user = Auth::user();
+        $siswa = $user->pendaftaran;
+        $siswa->update(['status' => 'diterima']);
+        if ($siswa->no_hp_orang_tua) {
+            $message = 'Pembayaran SPP Anda sebesar Rp ' . number_format($payment->amount, 0, ',', '.') . ' telah berhasil. Terima kasih.';
+            $this->whatsappService->send($siswa->no_hp_orang_tua, $message);
+        }
+
+        return redirect()->route('student.payment.show', $payment->id)->with('success', 'Pembayaran berhasil dikonfirmasi!');
+    }
+
+    public function cancel(Payment $payment)
+    {
+        if ($payment->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($payment->status !== 'pending') {
+            return back()->with('error', 'Hanya pembayaran dengan status pending yang dapat dibatalkan.');
+        }
+
+        $payment->delete();
+
+        return redirect()->route('student.payment.index')->with('success', 'Pembayaran berhasil dibatalkan.');
+    }
 }
