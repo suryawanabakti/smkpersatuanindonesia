@@ -37,10 +37,11 @@ class SuggestionController extends Controller
      */
     public function create()
     {
-        $panitiaUsers = \App\Models\User::role('panitia')->get();
+        $panitiaUsers = \App\Models\User::role(['panitia'])->get();
+        $adminUsers = \App\Models\User::role(['admin'])->get();
         $bendaharaUsers = \App\Models\User::role('bendahara')->get();
 
-        return view('kepala_sekolah.suggestions.create', compact('panitiaUsers', 'bendaharaUsers'));
+        return view('kepala_sekolah.suggestions.create', compact('panitiaUsers', 'adminUsers', 'bendaharaUsers'));
     }
 
     /**

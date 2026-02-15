@@ -20,7 +20,13 @@ class PaymentController extends Controller
     }
     public function index()
     {
-        $payments = Payment::where('user_id', Auth::id())->latest()->get();
+        $user = Auth::user();
+        $siswa = $user->pendaftaran;
+        if (!$siswa->status_konfirmasi || $siswa->status !== 'diterima') {
+            return redirect()->route('student.dashboard')->with('error', 'Proses pembayaran boleh dilakukan ketika berkas yang di unggah siswa itu sudah dicek dan divalidasi oleh panitia .');
+        }
+
+        $payments = Payment::where('user_id', $user->id)->latest()->get();
 
         return view('student.payment.index', compact('payments'));
     }
@@ -140,7 +146,7 @@ class PaymentController extends Controller
         $siswa = $user->pendaftaran;
         $siswa->update(['status' => 'diterima']);
         if ($siswa->no_hp_orang_tua) {
-            $message = 'Pembayaran SPP Anda sebesar Rp ' . number_format($payment->amount, 0, ',', '.') . ' telah berhasil. Terima kasih.';
+            $message = 'Pembayaran Atribut Anda sebesar Rp ' . number_format($payment->amount, 0, ',', '.') . ' telah berhasil. Terima kasih.';
             $this->whatsappService->send($siswa->no_hp_orang_tua, $message);
         }
 

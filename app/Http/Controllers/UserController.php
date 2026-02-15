@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use Illuminate\Validation\Rule;
+use App\Notifications\ActivityNotification;
 
 class UserController extends Controller
 {
@@ -20,7 +21,7 @@ class UserController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -48,11 +49,17 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        User::create([
+        $newUser = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
         ]);
+
+        User::notifyKepsek(new ActivityNotification(
+            "Admin menambahkan user baru: {$newUser->name} ({$newUser->email})",
+            auth()->user(),
+            'create'
+        ));
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -95,6 +102,12 @@ class UserController extends Controller
 
         $user->update($data);
 
+        User::notifyKepsek(new ActivityNotification(
+            "Admin mengubah informasi user: {$user->name}",
+            auth()->user(),
+            'update'
+        ));
+
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
@@ -107,7 +120,14 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete yourself.');
         }
 
+        $userName = $user->name;
         $user->delete();
+
+        User::notifyKepsek(new ActivityNotification(
+            "Admin mengeluarkan user: {$userName}",
+            auth()->user(),
+            'delete'
+        ));
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }

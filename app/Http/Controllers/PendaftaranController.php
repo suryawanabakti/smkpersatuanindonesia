@@ -70,7 +70,10 @@ class PendaftaranController extends Controller
 
             DB::commit();
 
-            // 4. Auto Login
+            // 4. Notify Panitia
+            User::notifyPanitia(new \App\Notifications\StudentRegisteredNotification($siswa));
+
+            // 5. Auto Login
             Auth::login($user);
 
             return redirect()->route('student.formulir.edit')->with('success', 'Pendaftaran berhasil! Silakan lengkapi formulir Anda.');

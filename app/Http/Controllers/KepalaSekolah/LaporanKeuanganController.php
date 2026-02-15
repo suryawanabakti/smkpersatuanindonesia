@@ -42,6 +42,9 @@ class LaporanKeuanganController extends Controller
         if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->date_to);
         }
+        if ($request->filled('year')) {
+            $query->whereYear('created_at', $request->year);
+        }
 
         $payments = $query->paginate(15);
 
@@ -50,9 +53,14 @@ class LaporanKeuanganController extends Controller
         $totalPending = Payment::where('status', 'pending')->count();
         $totalSuccess = Payment::where('status', 'paid')->count();
         $totalFailed = Payment::where('status', 'failed')->count();
+        $availableYears = Payment::selectRaw('YEAR(created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
 
         return view('kepala_sekolah.laporan_keuangan', compact(
             'payments',
+            'availableYears',
             'totalRevenue',
             'totalPending',
             'totalSuccess',

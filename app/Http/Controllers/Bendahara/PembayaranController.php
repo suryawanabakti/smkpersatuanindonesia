@@ -7,6 +7,8 @@ use App\Models\Payment;
 use App\Exports\PaymentExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Notifications\ActivityNotification;
 
 class PembayaranController extends Controller
 {
@@ -59,6 +61,12 @@ class PembayaranController extends Controller
 
         $payment->update(['status' => $request->status]);
 
+        User::notifyKepsek(new ActivityNotification(
+            "Bendahara memperbarui status pembayaran: {$payment->order_id} menjadi {$request->status}",
+            auth()->user(),
+            'update'
+        ));
+
         return back()->with('success', 'Status pembayaran berhasil diperbarui.');
     }
 
@@ -72,7 +80,15 @@ class PembayaranController extends Controller
 
     public function destroy(Payment $payment)
     {
+        $orderId = $payment->order_id;
         $payment->delete();
+
+        User::notifyKepsek(new ActivityNotification(
+            "Bendahara menghapus data pembayaran: {$orderId}",
+            auth()->user(),
+            'delete'
+        ));
+
         return back()->with('success', 'Pembayaran berhasil dihapus.');
     }
 

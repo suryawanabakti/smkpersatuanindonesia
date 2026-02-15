@@ -14,10 +14,12 @@ class JadwalPpdb extends Model
         'tanggal_mulai',
         'tanggal_selesai',
         'keterangan',
+        'is_active',
     ];
 
     protected $casts = [
         'tanggal_mulai' => 'date',
         'tanggal_selesai' => 'date',
+        'is_active' => 'boolean',
     ];
 }

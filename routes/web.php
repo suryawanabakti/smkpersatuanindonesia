@@ -50,10 +50,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-suggestions/{suggestion}', [App\Http\Controllers\MySuggestionController::class, 'show'])->name('my_suggestions.show');
 
     // Routes for Panitia PPDB
-    Route::middleware(['role:panitia'])->prefix('panitia')->name('panitia.')->group(function () {
+    Route::middleware(['role:panitia|admin'])->prefix('panitia')->name('panitia.')->group(function () {
+        Route::patch('jadwal/{jadwal}/toggle-status', [App\Http\Controllers\Panitia\JadwalPpdbController::class, 'toggleStatus'])->name('jadwal.toggle_status');
         Route::resource('jadwal', App\Http\Controllers\Panitia\JadwalPpdbController::class);
         Route::post('articles/upload', [App\Http\Controllers\Panitia\ArticleController::class, 'uploadEditorImage'])->name('articles.upload');
         Route::resource('articles', App\Http\Controllers\Panitia\ArticleController::class);
+        Route::resource('tests', App\Http\Controllers\Panitia\SelectionTestController::class);
         Route::resource('spp', App\Http\Controllers\Panitia\SppInformationController::class);
 
         Route::get('pendaftaran', [App\Http\Controllers\Panitia\PendaftaranSiswaController::class, 'index'])->name('pendaftaran.index');
@@ -77,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('pembayaran/{payment}', [App\Http\Controllers\Bendahara\PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 
         Route::get('laporan', [App\Http\Controllers\Bendahara\LaporanController::class, 'index'])->name('laporan.index');
+        Route::put('laporan/update-price', [App\Http\Controllers\Bendahara\LaporanController::class, 'updatePrice'])->name('laporan.update_price');
     });
 
     // Routes for Kepala Sekolah
@@ -103,7 +106,7 @@ Route::get('/test-notification/{id}', function ($id) {
     return 'Payment ' . $payment->id . ' status updated to paid';
 });
 
-Route::middleware(['auth', 'role:panitia'])->group(function () {
+Route::middleware(['auth', 'role:panitia|admin'])->group(function () {
     Route::get('/panitia/school-information', [App\Http\Controllers\Panitia\SchoolInformationController::class, 'edit'])->name('panitia.school_information.edit');
     Route::put('/panitia/school-information', [App\Http\Controllers\Panitia\SchoolInformationController::class, 'update'])->name('panitia.school_information.update');
 });

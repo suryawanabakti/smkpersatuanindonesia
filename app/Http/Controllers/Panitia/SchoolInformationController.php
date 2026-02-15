@@ -9,12 +9,14 @@ class SchoolInformationController extends Controller
 {
     public function edit()
     {
+        $this->authorize('manage school information');
         $info = \App\Models\SchoolInformation::first();
         return view('panitia.school_information.edit', compact('info'));
     }
 
     public function update(Request $request)
     {
+        $this->authorize('manage school information');
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',

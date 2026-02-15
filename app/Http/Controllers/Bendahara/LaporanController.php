@@ -21,6 +21,23 @@ class LaporanController extends Controller
             ->groupBy('months')
             ->get();
 
-        return view('bendahara.laporan.index', compact('totalPendapatan', 'pendapatanPerBulan'));
+        $schoolInfo = \App\Models\SchoolInformation::first();
+
+        return view('bendahara.laporan.index', compact('totalPendapatan', 'pendapatanPerBulan', 'schoolInfo'));
+    }
+
+    public function updatePrice(Request $request)
+    {
+        $request->validate([
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $schoolInfo = \App\Models\SchoolInformation::first();
+
+        if ($schoolInfo) {
+            $schoolInfo->update(['price' => $request->price]);
+        }
+
+        return redirect()->back()->with('success', 'Biaya pendaftaran berhasil diperbarui.');
     }
 }

@@ -52,4 +52,26 @@ class User extends Authenticatable
     {
         return $this->hasOne(PendaftaranSiswa::class);
     }
+
+    /**
+     * Notify all users with the kepala_sekolah role.
+     */
+    public static function notifyKepsek($notification)
+    {
+        $kepsekUsers = self::role('kepala_sekolah')->get();
+        foreach ($kepsekUsers as $user) {
+            $user->notify($notification);
+        }
+    }
+
+    /**
+     * Notify all users with the panitia role.
+     */
+    public static function notifyPanitia($notification)
+    {
+        $panitiaUsers = self::role('panitia')->get();
+        foreach ($panitiaUsers as $user) {
+            $user->notify($notification);
+        }
+    }
 }

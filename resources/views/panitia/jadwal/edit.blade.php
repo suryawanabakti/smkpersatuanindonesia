@@ -13,26 +13,51 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-4">
-                            <label for="nama_kegiatan" class="block text-gray-700 text-sm font-bold mb-2">Nama Kegiatan</label>
-                            <input type="text" name="nama_kegiatan" id="nama_kegiatan" value="{{ $jadwal->nama_kegiatan }}" class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" required>
+                            <label for="nama_kegiatan" class="block text-gray-700 text-sm font-bold mb-2">Nama
+                                Kegiatan</label>
+                            <input type="text" name="nama_kegiatan" id="nama_kegiatan"
+                                value="{{ $jadwal->nama_kegiatan }}"
+                                class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors"
+                                required>
                         </div>
                         <div class="mb-4">
-                            <label for="tanggal_mulai" class="block text-gray-700 text-sm font-bold mb-2">Tanggal Mulai</label>
-                            <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="{{ $jadwal->tanggal_mulai->format('Y-m-d') }}" class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" required>
+                            <label for="tanggal_mulai" class="block text-gray-700 text-sm font-bold mb-2">Tanggal
+                                Mulai</label>
+                            <input type="date" name="tanggal_mulai" id="tanggal_mulai"
+                                value="{{ $jadwal->tanggal_mulai->format('Y-m-d') }}"
+                                class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors"
+                                required>
                         </div>
                         <div class="mb-4">
-                            <label for="tanggal_selesai" class="block text-gray-700 text-sm font-bold mb-2">Tanggal Selesai</label>
-                            <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{ $jadwal->tanggal_selesai->format('Y-m-d') }}" class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors" required>
+                            <label for="tanggal_selesai" class="block text-gray-700 text-sm font-bold mb-2">Tanggal
+                                Selesai</label>
+                            <input type="date" name="tanggal_selesai" id="tanggal_selesai"
+                                value="{{ $jadwal->tanggal_selesai->format('Y-m-d') }}"
+                                class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors"
+                                required>
                         </div>
                         <div class="mb-4">
-                            <label for="keterangan" class="block text-gray-700 text-sm font-bold mb-2">Keterangan</label>
-                            <textarea name="keterangan" id="keterangan" class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors">{{ $jadwal->keterangan }}</textarea>
+                            <label for="keterangan"
+                                class="block text-gray-700 text-sm font-bold mb-2">Keterangan</label>
+                            <textarea name="keterangan" id="keterangan"
+                                class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors">{{ $jadwal->keterangan }}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="is_active" value="1"
+                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    {{ $jadwal->is_active ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600 font-bold">Status Aktif</span>
+                            </label>
                         </div>
                         <div class="flex items-center justify-between">
-                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                            <button
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="submit">
                                 Perbarui
                             </button>
-                            <a href="{{ route('panitia.jadwal.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                            <a href="{{ route('panitia.jadwal.index') }}"
+                                class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
                                 Batal
                             </a>
                         </div>

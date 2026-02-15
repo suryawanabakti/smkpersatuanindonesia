@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JadwalPpdb;
 use App\Models\Payment;
 use App\Models\PendaftaranSiswa;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class DashboardController extends Controller
             return redirect()->route('kepala_sekolah.dashboard', $request->all());
         }
 
-        if ($user->hasRole('panitia')) {
+        if ($user->hasRole('panitia') || $user->hasRole('admin')) {
             return $this->panitiaDashboard($request);
         }
 
@@ -52,7 +53,9 @@ class DashboardController extends Controller
         $totalPending = (clone $query)->where('status', 'pending')->count();
         $recentSiswa = (clone $query)->latest()->take(5)->get();
 
+        $jadwal = JadwalPpdb::orderBy('created_at', 'desc')->first();
         return view('panitia.dashboard', compact(
+            'jadwal',
             'totalSiswa',
             'totalDiterima',
             'totalDitolak',

@@ -31,6 +31,11 @@
                                                         <option value="{{ $user->id }}">{{ $user->name }} (Panitia)</option>
                                                     @endforeach
                                                 </optgroup>
+                                                 <optgroup label="Admin">
+                                                    @foreach($adminUsers as $user)
+                                                        <option value="{{ $user->id }}">{{ $user->name }} (Panitia)</option>
+                                                    @endforeach
+                                                </optgroup>
                                                 <optgroup label="Bendahara">
                                                     @foreach($bendaharaUsers as $user)
                                                         <option value="{{ $user->id }}">{{ $user->name }} (Bendahara)</option>

@@ -26,6 +26,9 @@ class DashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('student.dashboard', compact('user', 'pendaftaran', 'latestPayment', 'sppInfo', 'allStudents'));
+        // Fetch Selection Tests (Informasi Wawancara)
+        $selectionTests = \App\Models\SelectionTest::latest()->get();
+
+        return view('student.dashboard', compact('user', 'pendaftaran', 'latestPayment', 'sppInfo', 'allStudents', 'selectionTests'));
     }
 }

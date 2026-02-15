@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,20 +14,54 @@
             margin: 0 auto;
             padding: 20px;
         }
+
         .header {
-            text-align: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
             margin-bottom: 5px;
         }
-        .address {
-            font-size: 14px;
+
+        .header table {
+            width: 100%;
+            border: none;
         }
+
+        .header td {
+            vertical-align: middle;
+            border: none;
+        }
+
+        .header-text {
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .header-text h1 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .header-text p {
+            margin: 2px 0 0;
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        .line-double {
+            border-top: 3px solid #000;
+            border-bottom: 1px solid #000;
+            height: 2px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
         .receipt-title {
             text-align: center;
             font-size: 20px;
@@ -34,17 +69,21 @@
             margin: 20px 0;
             text-transform: uppercase;
         }
+
         .details {
             margin-bottom: 20px;
         }
+
         .row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
         }
+
         .label {
             font-weight: bold;
         }
+
         .total {
             border-top: 1px dashed #333;
             border-bottom: 1px dashed #333;
@@ -53,16 +92,19 @@
             font-size: 18px;
             font-weight: bold;
         }
+
         .footer {
             text-align: center;
             font-size: 12px;
             margin-top: 40px;
         }
+
         @media print {
             .no-print {
                 display: none;
             }
         }
+
         .btn-print {
             background: #333;
             color: #fff;
@@ -74,15 +116,32 @@
         }
     </style>
 </head>
+
 <body>
     <div class="no-print" style="text-align: right;">
         <button onclick="window.print()" class="btn-print">Cetak</button>
     </div>
 
     <div class="header">
-        <div class="logo">SMK Persatuan Indonesia Maros</div>
-        <div class="address">Jl. Poros kariango-carangki</div>
-        <div class="address">Telp: (021) 12345678 | Email: info@sekolah.sch.id</div>
+        <table>
+            <tr>
+                <td width="15%" style="text-align: left;">
+                    <img src="{{ asset('logo2.jpeg') }}" width="70" alt="Logo">
+                </td>
+                <td width="70%" class="header-text">
+                    <h2>PEMERINTAH PROVINSI SULAWESI SELATAN</h2>
+                    <h1>DINAS PENDIDIKAN</h1>
+                    <h1>UPT SMK PERSATUAN INDONESIA MAROS</h1>
+                    <p>Alamat: JL. Poros Kariango Kostrad, Maros Tlp. 0411 – 4815517. Kode Pos : 90553</p>
+                    <p>Email: <span style="color: blue; text-decoration: underline;">marossmkpersatuan@gmail.com</span>,
+                        NPSN : 40300216</p>
+                </td>
+                <td width="15%" style="text-align: right;">
+                    <img src="{{ asset('logosulsel.jpeg') }}" width="70" alt="Logo">
+                </td>
+            </tr>
+        </table>
+        <div class="line-double"></div>
     </div>
 
     <div class="receipt-title">Bukti Pembayaran</div>
@@ -101,7 +160,7 @@
             <span>{{ $payment->user->name }}</span>
         </div>
         <!-- Assuming there's a way to get class/NIS, otherwise omit -->
-        
+
         <div class="row">
             <span class="label">Keterangan:</span>
             <span>{{ $payment->description }}</span>
@@ -132,4 +191,5 @@
         }
     </script>
 </body>
+
 </html>

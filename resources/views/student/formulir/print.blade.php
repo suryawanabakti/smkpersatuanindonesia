@@ -1,119 +1,170 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Formulir Pendaftaran - {{ $siswa->nama_lengkap }}</title>
     <style>
-    body {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 11px;
-        line-height: 1.3;
-        color: #000;
-        margin: 0;
-        padding: 30px;
-    }
-
-    .header {
-        text-align: center;
-        border-bottom: 2px double #000;
-        margin-bottom: 10px;
-        padding-bottom: 6px;
-    }
-
-    .header h1 {
-        margin: 0;
-        font-size: 18px;
-        text-transform: uppercase;
-    }
-
-    .header p {
-        margin: 2px 0;
-        font-size: 11px;
-    }
-
-    .title {
-        text-align: center;
-        margin-bottom: 15px;
-    }
-
-    .title h2 {
-        font-size: 14px;
-        margin: 0;
-        text-decoration: underline;
-    }
-
-    .title p {
-        margin: 2px 0 0;
-        font-size: 11px;
-    }
-
-    .section-title {
-        font-weight: bold;
-        background: #eee;
-        padding: 4px 8px;
-        margin: 12px 0 6px 0;
-        border: 1px solid #ccc;
-        font-size: 11px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    table td {
-        padding: 3px 4px;
-        vertical-align: top;
-        font-size: 11px;
-    }
-
-    .label {
-        width: 170px;
-        white-space: nowrap;
-    }
-
-    .colon {
-        width: 8px;
-    }
-
-    .footer {
-        margin-top: 25px;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .signature {
-        text-align: center;
-        width: 220px;
-        font-size: 11px;
-    }
-
-    .signature-space {
-        height: 55px;
-    }
-
-    @media print {
         body {
-            padding: 15mm;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #000;
+            margin: 0;
+            padding: 30px;
         }
-        .no-print {
-            display: none;
+
+        .header {
+            margin-bottom: 5px;
         }
-    }
-</style>
+
+        .header table {
+            width: 100%;
+            border: none;
+        }
+
+        .header td {
+            vertical-align: middle;
+            border: none;
+        }
+
+        .header-text {
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .header-text h1 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .header-text p {
+            margin: 2px 0 0;
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        .line-double {
+            border-top: 3px solid #000;
+            border-bottom: 1px solid #000;
+            height: 2px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .title h2 {
+            font-size: 15px;
+            margin: 0;
+            text-decoration: underline;
+        }
+
+        .title p {
+            margin: 2px 0 0;
+            font-size: 16px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            background: #eee;
+            padding: 4px 8px;
+            margin: 16px 0 6px 0;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table td {
+            padding: 3px 4px;
+            vertical-align: top;
+            font-size: 16px;
+        }
+
+        .label {
+            width: 170px;
+            white-space: nowrap;
+        }
+
+        .colon {
+            width: 8px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .signature {
+            text-align: center;
+            width: 220px;
+            font-size: 16px;
+        }
+
+        .signature-space {
+            height: 55px;
+        }
+
+        @media print {
+            body {
+                padding: 15mm;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
 
 </head>
+
 <body>
     <div class="no-print" style="margin-bottom: 20px; text-align: right;">
-        <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer; background: #4f46e5; color: white; border: none; border-radius: 5px;">Cetak Sekarang</button>
-        <a href="{{ route('student.formulir.edit') }}" style="padding: 10px 20px; text-decoration: none; background: #6b7280; color: white; border-radius: 5px; margin-left: 10px;">Kembali</a>
+        <button onclick="window.print()"
+            style="padding: 10px 20px; cursor: pointer; background: #4f46e5; color: white; border: none; border-radius: 5px;">Cetak
+            Sekarang</button>
+        <a href="{{ route('student.formulir.edit') }}"
+            style="padding: 10px 20px; text-decoration: none; background: #6b7280; color: white; border-radius: 5px; margin-left: 10px;">Kembali</a>
     </div>
 
     <div class="header">
-        <h1>PEMERINTAH PROVINSI SULAWESI SELATAN <br> DINAS PENDIDIKAN <br> UPT SMK PERSATUAN INDONESIA MAROS </h1>
-        <p>Alamat : Jl. Poros Kariango-Carangki,Desa Lekopancing, Kec. Tanralili, Kab. Maros</p>
-        
+        <table>
+            <tr>
+                <td width="15%" style="text-align: left;">
+                    <img src="{{ asset('logo2.jpeg') }}" width="70" alt="Logo">
+                </td>
+                <td width="70%" class="header-text">
+                    <h2>PEMERINTAH PROVINSI SULAWESI SELATAN</h2>
+                    <h1>DINAS PENDIDIKAN</h1>
+                    <h1>UPT SMK PERSATUAN INDONESIA MAROS</h1>
+                    <p>Alamat: JL. Poros Kariango Kostrad, Maros Tlp. 0411 – 4815517. Kode Pos : 90553</p>
+                    <p>Email: <span style="color: blue; text-decoration: underline;">marossmkpersatuan@gmail.com</span>,
+                        NPSN : 40300216</p>
+                </td>
+                <td width="15%" style="text-align: right;">
+                    <img src="{{ asset('logosulsel.jpeg') }}" width="70" alt="Logo">
+                </td>
+            </tr>
+        </table>
+        <div class="line-double"></div>
     </div>
 
     <div class="title">
@@ -214,4 +265,5 @@
         }
     </script>
 </body>
+
 </html>

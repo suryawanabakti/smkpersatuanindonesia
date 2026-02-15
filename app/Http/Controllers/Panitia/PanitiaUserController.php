@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panitia;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\ActivityNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -16,6 +17,7 @@ class PanitiaUserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('manage panitia');
         $query = User::role('panitia')->whereNot('id', auth()->id());
 
         if ($request->filled('search')) {
@@ -36,6 +38,7 @@ class PanitiaUserController extends Controller
      */
     public function create()
     {
+        $this->authorize('manage panitia');
         return view('panitia.users.create');
     }
 
@@ -44,6 +47,7 @@ class PanitiaUserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('manage panitia');
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -57,6 +61,12 @@ class PanitiaUserController extends Controller
         ]);
 
         $user->assignRole('panitia');
+
+        User::notifyKepsek(new ActivityNotification(
+            "Admin menambahkan panitia baru: {$user->name} ({$user->email})",
+            auth()->user(),
+            'create'
+        ));
 
         return redirect()->route('panitia.users.index')->with('success', 'Akun Panitia berhasil ditambahkan.');
     }
@@ -99,7 +109,11 @@ class PanitiaUserController extends Controller
         }
 
         $user->update($data);
-
+        User::notifyKepsek(new ActivityNotification(
+            "Admin mengupdate panitia: {$user->name} ({$user->email})",
+            auth()->user(),
+            'update'
+        ));
         return redirect()->route('panitia.users.index')->with('success', 'Akun Panitia berhasil diperbarui.');
     }
 
@@ -117,7 +131,11 @@ class PanitiaUserController extends Controller
         }
 
         $user->delete();
-
+        User::notifyKepsek(new ActivityNotification(
+            "Admin menghapus panitia: {$user->name} ({$user->email})",
+            auth()->user(),
+            'delete'
+        ));
         return redirect()->route('panitia.users.index')->with('success', 'Akun Panitia berhasil dihapus.');
     }
 }
