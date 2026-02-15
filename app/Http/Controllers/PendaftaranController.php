@@ -70,7 +70,7 @@ class PendaftaranController extends Controller
 
             DB::commit();
 
-            // 4. Notify Panitia
+            // 4. Notify Panitiaa
             User::notifyPanitia(new \App\Notifications\StudentRegisteredNotification($siswa));
 
             // 5. Auto Login
