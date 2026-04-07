@@ -39,7 +39,7 @@ class StudentRegisteredNotification extends Notification
         return (new MailMessage)
             ->subject('Pendaftaran Siswa Baru - ' . $this->siswa->nama_lengkap)
             ->greeting('Halo Panitia!')
-            ->line('Seorang mahasiswa baru telah mendaftar di sistem.')
+            ->line('Seorang siswa baru telah mendaftar di sistem.')
             ->line('Berikut adalah rincian pendaftar:')
             ->line('Nama Lengkap: ' . $this->siswa->nama_lengkap)
             ->line('Email: ' . $this->siswa->email)
@@ -61,7 +61,7 @@ class StudentRegisteredNotification extends Notification
             'nama_lengkap' => $this->siswa->nama_lengkap,
             'no_pendaftaran' => $this->siswa->no_pendaftaran,
             'jurusan_pilihan' => $this->siswa->jurusan_pilihan,
-            'message' => 'Mahasiswa baru telah mendaftar: ' . $this->siswa->nama_lengkap,
+            'message' => 'Siswa baru telah mendaftar: ' . $this->siswa->nama_lengkap,
             'type' => 'success',
             'log_type' => 'registration',
         ];

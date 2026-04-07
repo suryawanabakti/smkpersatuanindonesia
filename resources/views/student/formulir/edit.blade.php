@@ -94,10 +94,47 @@
                             @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-                            <input type="text" name="tempat_lahir"
-                                value="{{ old('tempat_lahir', $siswa->tempat_lahir) }}"
-                                class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm placeholder-gray-400 transition-colors">
+                            <label class="block text-sm font-medium text-gray-700">Provinsi Tempat Lahir</label>
+                            <div class="relative">
+                                <select id="provinsi_lahir" disabled
+                                    class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm transition-colors">
+                                    <option value="">Memuat provinsi...</option>
+                                </select>
+                                <div id="loading-provinsi" class="absolute right-8 top-1/2 -translate-y-1/2">
+                                    <svg class="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tempat Lahir (Kabupaten/Kota)</label>
+                            <div class="relative">
+                                <select id="kabupaten_lahir" name="tempat_lahir" disabled
+                                    class="mt-1 block w-full px-4 py-3 rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm transition-colors">
+                                    @if (old('tempat_lahir', $siswa->tempat_lahir))
+                                        <option value="{{ old('tempat_lahir', $siswa->tempat_lahir) }}" selected>
+                                            {{ old('tempat_lahir', $siswa->tempat_lahir) }}</option>
+                                    @else
+                                        <option value="">-- Pilih Provinsi terlebih dahulu --</option>
+                                    @endif
+                                </select>
+                                <div id="loading-kabupaten" class="absolute right-8 top-1/2 -translate-y-1/2 hidden">
+                                    <svg class="animate-spin h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
                             @error('tempat_lahir')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -138,7 +175,8 @@
                                     {{ old('agama', $siswa->agama) == 'Katolik' ? 'selected' : '' }}>Katolik</option>
                                 <option value="Hindu" {{ old('agama', $siswa->agama) == 'Hindu' ? 'selected' : '' }}>
                                     Hindu</option>
-                                <option value="Buddha" {{ old('agama', $siswa->agama) == 'Buddha' ? 'selected' : '' }}>
+                                <option value="Buddha"
+                                    {{ old('agama', $siswa->agama) == 'Buddha' ? 'selected' : '' }}>
                                     Buddha</option>
                                 <option value="Konghucu"
                                     {{ old('agama', $siswa->agama) == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
@@ -339,8 +377,89 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // API Wilayah Emsifa
+            const provinsiSelect = document.getElementById('provinsi_lahir');
+            const kabupatenSelect = document.getElementById('kabupaten_lahir');
+            const urlProvinsi = 'https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json';
+            const oldTempatLahir = `{!! addslashes(old('tempat_lahir', $siswa->tempat_lahir)) !!}`;
+
+            const loadingProvinsi = document.getElementById('loading-provinsi');
+            const loadingKabupaten = document.getElementById('loading-kabupaten');
+
+            if (provinsiSelect && kabupatenSelect) {
+                // Fetch Provinces
+                provinsiSelect.disabled = true;
+                fetch(urlProvinsi)
+                    .then(response => response.json())
+                    .then(provinces => {
+                        provinsiSelect.innerHTML = '<option value="">-- Pilih Provinsi --</option>';
+                        provinces.forEach(province => {
+                            const option = document.createElement('option');
+                            option.value = province.id;
+                            option.textContent = province.name;
+                            provinsiSelect.appendChild(option);
+                        });
+                        provinsiSelect.disabled = false;
+                        if (loadingProvinsi) loadingProvinsi.classList.add('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching provinces:', error);
+                        provinsiSelect.innerHTML = '<option value="">Gagal memuat provinsi</option>';
+                        if (loadingProvinsi) loadingProvinsi.classList.add('hidden');
+                    });
+
+                // Fetch Regencies on Province Change
+                provinsiSelect.addEventListener('change', function() {
+                    const provinceId = this.value;
+
+                    if (provinceId) {
+                        kabupatenSelect.innerHTML = '<option value="">Memuat kabupaten/kota...</option>';
+                        kabupatenSelect.disabled = true;
+                        if (loadingKabupaten) loadingKabupaten.classList.remove('hidden');
+
+                        const urlKabupaten =
+                            `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`;
+                        fetch(urlKabupaten)
+                            .then(response => response.json())
+                            .then(regencies => {
+                                kabupatenSelect.innerHTML =
+                                    '<option value="">-- Pilih Kabupaten/Kota --</option>';
+                                regencies.forEach(regency => {
+                                    const option = document.createElement('option');
+                                    option.value = regency.name;
+                                    option.textContent = regency.name;
+                                    kabupatenSelect.appendChild(option);
+                                });
+                                kabupatenSelect.disabled = false;
+                                if (loadingKabupaten) loadingKabupaten.classList.add('hidden');
+                                kabupatenSelect.dispatchEvent(new Event('change'));
+                            })
+                            .catch(error => {
+                                console.error('Error fetching regencies:', error);
+                                kabupatenSelect.innerHTML =
+                                    '<option value="">Gagal memuat kabupaten</option>';
+                                if (loadingKabupaten) loadingKabupaten.classList.add('hidden');
+                            });
+                    } else {
+                        kabupatenSelect.innerHTML =
+                            '<option value="">-- Pilih Provinsi terlebih dahulu --</option>';
+                        kabupatenSelect.disabled = true;
+                        if (oldTempatLahir) {
+                            kabupatenSelect.innerHTML =
+                                `<option value="${oldTempatLahir}" selected>${oldTempatLahir}</option>`;
+                            kabupatenSelect.disabled = false;
+                        }
+                        kabupatenSelect.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+
             const fields = [{
                     name: 'nama_lengkap',
+                    required: true
+                },
+                {
+                    name: 'provinsi_lahir',
                     required: true
                 },
                 {
