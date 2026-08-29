@@ -50,13 +50,26 @@ class PendaftaranController extends Controller
             // 2. Generate Unique No Pendaftaran
             $year = date('Y');
             $jurusan = $request->jurusan_pilihan;
+            $prefix = "{$jurusan}-{$year}";
 
-            // Count existing registrations for this jurusan and year
-            $count = PendaftaranSiswa::where('jurusan_pilihan', $jurusan)
+            // Find the last generated registration number for this major and year
+            $lastPendaftaran = PendaftaranSiswa::where('jurusan_pilihan', $jurusan)
                 ->whereYear('created_at', $year)
-                ->count() + 1;
+                ->orderBy('id', 'desc')
+                ->first();
 
-            $no_pendaftaran = "{$jurusan}-{$year}{$count}";
+            $count = 1;
+            if ($lastPendaftaran && str_starts_with($lastPendaftaran->no_pendaftaran, $prefix)) {
+                $lastCount = (int) substr($lastPendaftaran->no_pendaftaran, strlen($prefix));
+                $count = $lastCount + 1;
+            }
+
+            // Ensure uniqueness
+            while (PendaftaranSiswa::where('no_pendaftaran', "{$prefix}{$count}")->exists()) {
+                $count++;
+            }
+
+            $no_pendaftaran = "{$prefix}{$count}";
 
             // 3. Create PendaftaranSiswa record
             $siswa = PendaftaranSiswa::create([
